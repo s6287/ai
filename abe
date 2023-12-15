@@ -1,0 +1,32 @@
+import pandas as pd
+import warnings
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.metrics import confusion_matrix,accuracy_score,classification_report
+
+warnings.filterwarnings("ignore")
+
+data = pd.read_csv("apples_and_oranges.csv") 
+print(data)
+
+#test_size = 0.2 => 20% test, 80% training
+training_set, test_set = train_test_split(data, test_size = 0.2, random_state = 1)
+X_train = training_set.iloc[:,0:2].values
+Y_train = training_set.iloc[:,2].values
+X_test = test_set.iloc[:,0:2].values
+Y_test = test_set.iloc[:,2].values
+
+'''
+#base_estimer : It is a weak learner used to train this model.
+It uses DecisionTreeClassifier as default weak learner for training purposes.
+You can also specify different machine learning algorithms.
+#n_estimers : Number of weak learners to train iteratively
+#learning_rate : It contributes ton the weights of the weak learners.
+It uses 1 as a default value
+'''
+
+adaboost = AdaBoostClassifier(n_estimators = 100, learning_rate = 1, random_state = 1) #,base_estimator = None
+adaboost.fit(X_train,Y_train)
+Y_pred = adaboost.predict(X_test)
+test_set["Predictions"] = Y_pred
+print(Y_pred)
