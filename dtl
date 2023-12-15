@@ -1,0 +1,48 @@
+'''Aim : To Implement The Decision Tree Learning Algorithm to Build a Decision 
+Tree For A Given Dataset.
+Evaluate The Accuracy And Efficiency On The Test Data Set
+'''
+
+import numpy as np
+import pandas as pd
+from sklearn import tree
+from sklearn.preprocessing import LabelEncoder
+
+#Load Data
+PlayTennis = pd.read_csv('PlayTennis.csv')
+
+Le = LabelEncoder()
+
+PlayTennis['outlook'] = Le.fit_transform(PlayTennis['outlook'])
+PlayTennis['temp'] = Le.fit_transform(PlayTennis['temp'])
+PlayTennis['humidity'] = Le.fit_transform(PlayTennis['humidity'])
+PlayTennis['windy'] = Le.fit_transform(PlayTennis['windy'])
+PlayTennis['play'] = Le.fit_transform(PlayTennis['play'])
+
+#print(PlayTennis)
+y = PlayTennis['play']
+X = PlayTennis.drop(['play'], axis = 1)
+
+clf = tree.DecisionTreeClassifier(criterion = 'entropy')
+clf = clf.fit(X,y)
+
+tree.plot_tree(clf)
+
+o = int(input("What is the Outlook : "))
+t = int(input("What is the Temperature : "))
+h = int(input("What is the Humidity : "))
+w = int(input("How Windy it is ? : "))
+
+#Predict
+
+y_predict = clf.predict([[o,t,h,w]])
+v = 'PLAY' if y_predict[0] == 1 else "NOT PLAY"
+print("As Per The Situation One Should : ",v)
+
+
+'''
+import graphviz
+from sklearn.tree import export_graphviz
+dot data = tree.export_graphviz(clf,out file = None)
+graph = graphviz.Source(dot_data)
+'''
