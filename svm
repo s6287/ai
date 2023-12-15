@@ -1,0 +1,34 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC, LinearSVC
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import * #classifcation_report
+from sklearn.metrics import accuracy_score
+#import seaborn as sns
+
+df = pd.read_csv('diabetes.csv')
+#df.head()
+
+x = df.drop('Outcome', axis = 1)
+y = df['Outcome']
+
+x_train = x.iloc[:600]
+x_test = x.iloc[600:]
+y_train = y[:600]
+y_test = y[600:]
+
+classifier = SVC(kernel = "linear")
+classifier.fit(x_train, y_train)
+
+y_pred = classifier.predict(x_test)
+
+print('Confusion Matrix : ')
+print(confusion_matrix(y_test, y_pred))
+
+print('Accuracy Score : ')
+print(accuracy_score(y_test, y_pred))
+
+print('Classification Report : ')
+print(classification_report(y_test, y_pred))
